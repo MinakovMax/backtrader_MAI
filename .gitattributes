@@ -1,0 +1,2 @@
+Data/Tinkoff/TQBR.SBER_M1.txt filter=lfs diff=lfs merge=lfs -text
+Data/Finam/TQBR.SBER_M1.txt filter=lfs diff=lfs merge=lfs -text
