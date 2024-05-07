@@ -28,8 +28,7 @@ var/
 *.manifest
 *.spec
 
-/home/backtrader/Data/Tinkoff
-/home/backtrader/Data/Finam
+
 
 # Installer logs
 pip-log.txt
@@ -70,5 +69,7 @@ samples2/
 
 # Ignore test files in Datas
 datas/*.py
+Data/Tinkoff/
+Data/Finam/
 
 .idea/
