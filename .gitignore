@@ -28,8 +28,8 @@ var/
 *.manifest
 *.spec
 
-Data/Tinkoff/
-Data/Finam/
+/home/backtrader/Data/Tinkoff
+/home/backtrader/Data/Finam
 
 # Installer logs
 pip-log.txt
