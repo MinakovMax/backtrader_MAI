@@ -28,8 +28,8 @@ var/
 *.manifest
 *.spec
 
-Data/Tinkoff/TQBR.SBER_M1.txt
-Data/Finam/TQBR.SBER_M1.txt
+Data/Tinkoff/
+Data/Finam/
 
 # Installer logs
 pip-log.txt
