@@ -1,3 +1,6 @@
 # Получить токен можно в настройках профиля Тинькофф Инвестиции по ссылке: https://www.tinkoff.ru/invest/settings/
+import os
 
-token = 't.wfChMIt-LUQmV_w7NfefDTE7A5y0cTu9pVKu2dJxJX5jb0zlsr5OWLs2Fdahinb3CMCg8AJUpo_eoAbcpq4mxA'  # Токен
+t_api_key = api_key = os.getenv('T_API_KEY')
+
+token = t_api_key  # Токен
