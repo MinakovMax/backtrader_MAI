@@ -98,7 +98,7 @@ if __name__ == '__main__':  # Точка входа при запуске это
     symbol = 'TQBR.SBER'  # Тикер в формате: <Код режима торгов>.<Тикер>
     # symbol = 'FUT.SiH4'  # Для фьючерсов: <FUT>.<Код тикера><Месяц экспирации: 3-H, 6-M, 9-U, 12-Z>.<Последняя цифра года>
     # symbol = 'FUT.RIH4'
-    timeframe = bt.TimeFrame.Minutes  # Минутный временной интервал
+    timeframe = bt.TimeFrame.Minutes  # Минутный временой интервал
     compression = 1  # 1 минута
     fromdate = datetime.today().date() - timedelta(days=1)  # За сегодня
     live_bars = True  # Исторические и новые бары
@@ -108,7 +108,7 @@ if __name__ == '__main__':  # Точка входа при запуске это
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Формат сообщения
                         datefmt='%d.%m.%Y %H:%M:%S',  # Формат даты
                         level=logging.DEBUG,  # Уровень логируемых событий NOTSET/DEBUG/INFO/WARNING/ERROR/CRITICAL
-                        handlers=[logging.FileHandler('LimitCancel.log'), logging.StreamHandler()])  # Лог записываем в файл и выводим на консоль
+                        handlers=[logging.FileHandler('MyFinamTest.log'), logging.StreamHandler()])  # Лог записываем в файл и выводим на консоль
     logging.Formatter.converter = lambda *args: datetime.now(tz=store.provider.tz_msk).timetuple()  # В логе время указываем по МСК
 
     # noinspection PyArgumentList

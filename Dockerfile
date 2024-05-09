@@ -1,9 +1,8 @@
-# Используйте официальный базовый образ Python с версией 3.10.12
-FROM python:3.10.12-slim
+# Используйте официальный базовый образ Python с версией 3.11.8-slim
+FROM python:3.11.8-slim
 
 # Установите рабочую директорию внутри контейнера
 WORKDIR /app
-
 
 # Определяем аргументы сборки
 ARG API_KEY
@@ -13,7 +12,9 @@ ARG TELEBOT_KEY
 # Задаём переменные окружения
 ENV API_KEY=${API_KEY} \
     CLIENT_CODE=${CLIENT_CODE} \
-    TELEBOT_KEY=${TELEBOT_KEY}
+    TELEBOT_KEY=${TELEBOT_KEY} \
+    PATH="/usr/local/bin:${PATH}" \
+    PYTHONPATH="/app"
 
 # Установите необходимые системные пакеты
 RUN apt-get update && apt-get install -y \
@@ -26,13 +27,8 @@ RUN apt-get update && apt-get install -y \
     libgirepository1.0-dev \
     mc \
     nano \
-    git  # Добавляем установку Git
-
-# Клонируем репозитории
-# RUN git clone https://github.com/cia76/MarketPy.git
-# RUN git clone https://github.com/cia76/FinamPy.git
-# RUN git clone https://github.com/cia76/BackTraderFinam.git
-ENV PYTHONPATH="/app"
+    git \
+    procps
 
 # Скопируйте файл зависимостей в рабочую директорию
 COPY requirements.txt .
