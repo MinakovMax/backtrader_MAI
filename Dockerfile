@@ -33,11 +33,14 @@ RUN apt-get update && apt-get install -y \
 # Скопируйте файл зависимостей в рабочую директорию
 COPY requirements.txt .
 
-# Установите зависимости
+# Сначала установите protobuf без зависимостей
+RUN pip install --no-deps protobuf==5.26.0
+
+# Установите зависимости из requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Скопируйте все файлы проекта в рабочую директорию
 COPY . .
 
 # Задайте команду, которая будет выполняться при запуске контейнера
-CMD ["python", "/app/BackTraderFinam/Examples/TeleBotSber.py"]
+CMD ["python", "/app/BackTraderFinam/Examples/TeleBotSberDocker.py"]

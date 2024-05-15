@@ -12,7 +12,7 @@ import pandas as pd
 import os
 
 # noinspection PyShadowingNames,PyProtectedMember
-class LRStrategy(bt.Strategy):
+class LRStrategyDocker(bt.Strategy):
     """
     - Отображает статус подключения
     - При приходе нового бара отображает его цены/объем
@@ -25,21 +25,23 @@ class LRStrategy(bt.Strategy):
         ('loss_percent', 0.0015),  # Ограничение убытков 0.15%
     )  # Список торгуемых тикеров. По умолчанию торгуем все тикеры
     
-    logger = logging.getLogger('BackTraderFinam.TeleBotSber')  # Будем вести лог   
+    logger = logging.getLogger('BackTraderFinam.TeleBotSberDocker')  # Будем вести лог   
 
     def __init__(self):
      
-        self.model = joblib.load('/home/backtrader/BackTraderTinkoff/Examples/sber1mv2.joblib')
-        # self.model = joblib.load('/app/BackTraderFinam/DataExamples/sber1mv2.joblib')
+        # self.model = joblib.load('/home/backtrader/BackTraderTinkoff/Examples/sber1mv2.joblib')
+        self.model = joblib.load('/app/BackTraderFinam/Examples/sber1mv2.joblib')
         telebot_key = os.getenv('TELEBOT_KEY')
         self.bot = telebot.TeleBot(telebot_key)
         self.open_price = 0        
         self.live = False  # Сначала будут приходить исторические данные, затем перейдем в режим реальной торговли
         self.order = None  # Заявка на вход/выход из позиции
+        self.logger.info("__init__ выполняется.")
 
     def next(self):        
         """Получение следующего исторического/нового бара"""
-                
+        self.logger.info("Метод next выполняется.")
+        
         if len(self.data) > 100 and self.live:
             len100closes = [self.data.close[-i] for i in range(0, 100)]
             
@@ -54,8 +56,8 @@ class LRStrategy(bt.Strategy):
             df.drop(columns=['date'], inplace=True)
 
             y = self.model.predict_proba(df)[:, 1]             
-            self.logger.info(f'Вероятность роста {y[0]}')
-            self.bot.send_message(527704275, f'Вероятность роста {y[0]}')
+            self.logger.info(f'Уверенность модели: {y[0]}')
+            self.bot.send_message(527704275, f'Уверенность модели: {y[0]}')
             
             # Проверка на наличие открытых позиций
             if self.open_price == 0:                
@@ -64,8 +66,8 @@ class LRStrategy(bt.Strategy):
                     price = self.data.close[0]  # Текущая цена закрытия
                     
                     self.open_price = price
-                    self.logger.info(f'Хорошая вероятность роста сбербанку при цене {price}, цель {price * (1 + self.params.profit_percent):.2f}')
-                    self.bot.send_message(527704275, f'Хорошая вероятность роста сбербанку при цене {price}, цель {price * (1 + self.params.profit_percent):.2f}')
+                    self.logger.info(f'Хорошая вероятность роста сбербанка при цене {price}, цель {price * (1 + self.params.profit_percent):.2f}')
+                    self.bot.send_message(527704275, f'Хорошая вероятность роста сбербанка при цене {price}, цель {price * (1 + self.params.profit_percent):.2f}')
             else:
                 # Получаем текущую цену
                 price = self.data.close[0]                   
@@ -109,7 +111,7 @@ if __name__ == '__main__':  # Точка входа при запуске это
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Формат сообщения
                         datefmt='%d.%m.%Y %H:%M:%S',  # Формат даты
                         level=logging.DEBUG,  # Уровень логируемых событий NOTSET/DEBUG/INFO/WARNING/ERROR/CRITICAL
-                        handlers=[logging.FileHandler('TeleBotSber.log'), logging.StreamHandler()])  # Лог записываем в файл и выводим на консоль
+                        handlers=[logging.FileHandler('TeleBotSberDocker.log'), logging.StreamHandler()])  # Лог записываем в файл и выводим на консоль
     logging.Formatter.converter = lambda *args: datetime.now(tz=store.provider.tz_msk).timetuple()  # В логе время указываем по МСК
 
     # noinspection PyArgumentList
@@ -123,5 +125,5 @@ if __name__ == '__main__':  # Точка входа при запуске это
     cerebro.adddata(data)  # Добавляем данные
     cerebro.addsizer(bt.sizers.FixedSize, stake=10)  # Кол-во акций в штуках для покупки/продажи
     # cerebro.addsizer(bt.sizers.FixedSize, stake=1)  # Кол-во фьючерсов в штуках для покупки/продажи
-    cerebro.addstrategy(LRStrategy)  # Добавляем торговую систему с лимитным входом в n%
+    cerebro.addstrategy(LRStrategyDocker)  # Добавляем торговую систему с лимитным входом в n%
     cerebro.run()  # Запуск торговой системы
